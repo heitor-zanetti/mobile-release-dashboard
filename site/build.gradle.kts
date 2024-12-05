@@ -4,7 +4,7 @@ plugins {
     alias(libs.plugins.kotlin.multiplatform)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kobweb.application)
-    // alias(libs.plugins.kobwebx.markdown)
+    alias(libs.plugins.kotlinSerialization)
 }
 
 group = "com.adaptics.dashboard"
@@ -24,6 +24,9 @@ kotlin {
     sourceSets {
         commonMain.dependencies {
             implementation(libs.compose.runtime)
+            implementation(libs.kotlin.serialization.json)
+            implementation(libs.kotlin.serialization)
+            implementation(libs.kotlin.datetime)
         }
 
         jsMain.dependencies {
@@ -31,7 +34,6 @@ kotlin {
             implementation(libs.kobweb.core)
             implementation(libs.kobweb.silk)
             implementation(libs.silk.icons.fa)
-            // implementation(libs.kobwebx.markdown)
             
         }
         jvmMain.dependencies {

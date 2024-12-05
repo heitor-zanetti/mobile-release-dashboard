@@ -1,18 +1,30 @@
 package com.adaptics.dashboard.pages
 
 import androidx.compose.runtime.*
-import com.varabyte.kobweb.compose.foundation.layout.Box
-import com.varabyte.kobweb.compose.ui.Alignment
-import com.varabyte.kobweb.compose.ui.Modifier
-import com.varabyte.kobweb.compose.ui.modifiers.fillMaxSize
+import com.adaptics.dashboard.components.ReleasePage
+import com.adaptics.dashboard.components.view_entity.ReleaseViewEntity
+import com.adaptics.dashboard.components.view_entity.toReleaseCardViewEntity
+import com.adaptics.dashboard.model.Release
+import com.varabyte.kobweb.browser.api
 import com.varabyte.kobweb.core.Page
-import org.jetbrains.compose.web.dom.Text
+import kotlinx.browser.window
+import kotlinx.serialization.json.Json
 
 @Page
 @Composable
 fun HomePage() {
-    // TODO: Replace the following with your own content
-    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-        Text("THIS PAGE INTENTIONALLY LEFT BLANK")
+    val releases = remember { mutableStateListOf<ReleaseViewEntity>() }
+
+    ReleasePage(releaseCardItems = releases)
+
+    LaunchedEffect(Unit) {
+        releases.clear()
+        releases.addAll(getReleases().map { it.toReleaseCardViewEntity() })
+    }
+}
+
+private suspend fun getReleases(): List<Release> {
+    return window.api.get("release").let { listBytes ->
+        Json.decodeFromString(listBytes.decodeToString())
     }
 }
